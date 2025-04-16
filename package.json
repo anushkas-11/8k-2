@@ -9,7 +9,7 @@
     "deploy": "hardhat run scripts/deploy.js --network hardhat",
     "deploy:goerli": "hardhat run scripts/deploy.js --network goerli",
     "deploy:mumbai": "hardhat run scripts/deploy.js --network mumbai",
-    "ipfs-upload": "node ipfs_handler.js",
+    "ipfs-upload": "node ipfs_handler_w3up.js",
     "blockchain-upload": "node web3client.js upload",
     "start-local-node": "hardhat node",
     "pipeline": "python pipeline.py"
@@ -18,17 +18,17 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@web3-storage/w3up-client": "^11.2.1",
     "dotenv": "^16.0.3",
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.2",
-    "hardhat": "^2.14.0",
-    "ipfs-http-client": "^60.0.0"
+    "hardhat": "^2.14.0"
   },
   "devDependencies": {
     "chai": "^4.3.7"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "license": "MIT"
 }
