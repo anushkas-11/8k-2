@@ -62,10 +62,9 @@ class DecentralizedVideoPipeline:
                 "server_port": 8080
             },
             "ipfs": {
-                "host": "ipfs.infura.io",
-                "port": 5001,
-                "protocol": "https",
-                "gateway": "https://ipfs.io/ipfs/"
+                "service": "web3.storage",
+                "token": os.environ.get("WEB3STORAGE_TOKEN", ""),
+                "gateway": "https://{cid}.ipfs.w3s.link"
             },
             "ethereum": {
                 "provider_url": os.environ.get("PROVIDER_URL", "http://localhost:8545"),
@@ -94,6 +93,9 @@ class DecentralizedVideoPipeline:
         if "LIVEPEER_API_KEY" in os.environ:
             config["livepeer"]["api_key"] = os.environ["LIVEPEER_API_KEY"]
         
+        if "WEB3STORAGE_TOKEN" in os.environ:
+            config["ipfs"]["token"] = os.environ["WEB3STORAGE_TOKEN"]
+        
         return config
     
     def _save_config(self, config: Dict[str, Any], config_path: str) -> None:
@@ -118,6 +120,14 @@ class DecentralizedVideoPipeline:
         if "ethereum" in safe_config:
             if "private_key" in safe_config["ethereum"]:
                 safe_config["ethereum"]["private_key"] = ""
+        
+        if "ipfs" in safe_config:
+            if "token" in safe_config["ipfs"]:
+                safe_config["ipfs"]["token"] = ""
+        
+        if "livepeer" in safe_config:
+            if "api_key" in safe_config["livepeer"]:
+                safe_config["livepeer"]["api_key"] = ""
         
         return safe_config
     
@@ -149,8 +159,18 @@ class DecentralizedVideoPipeline:
         
         print(f"Uploading to IPFS: {video_path}")
         
+        # Set Web3.Storage token from config or environment
+        env = os.environ.copy()
+        if "ipfs" in self.config and "token" in self.config["ipfs"]:
+            env["WEB3STORAGE_TOKEN"] = self.config["ipfs"]["token"]
+        
+        # Determine which IPFS handler to use
+        ipfs_script = "ipfs_handler_web3storage.js"
+        if not os.path.exists(ipfs_script):
+            print(f"Warning: {ipfs_script} not found, falling back to default ipfs_handler.js")
+            ipfs_script = "ipfs_handler.js"
+        
         # Prepare command
-        ipfs_script = "ipfs_handler.js"
         cmd = ["node", ipfs_script, video_path, title, description]
         
         # Execute process
@@ -158,7 +178,8 @@ class DecentralizedVideoPipeline:
             process = await asyncio.create_subprocess_exec(
                 *cmd,
                 stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+                stderr=asyncio.subprocess.PIPE,
+                env=env
             )
             
             stdout, stderr = await process.communicate()
