@@ -63,7 +63,7 @@ class DecentralizedVideoPipeline:
             },
             "ipfs": {
                 "service": "web3.storage",
-                "token": os.environ.get("WEB3STORAGE_TOKEN", ""),
+                "email": os.environ.get("WEB3STORAGE_EMAIL", ""),
                 "gateway": "https://{cid}.ipfs.w3s.link"
             },
             "ethereum": {
@@ -93,8 +93,8 @@ class DecentralizedVideoPipeline:
         if "LIVEPEER_API_KEY" in os.environ:
             config["livepeer"]["api_key"] = os.environ["LIVEPEER_API_KEY"]
         
-        if "WEB3STORAGE_TOKEN" in os.environ:
-            config["ipfs"]["token"] = os.environ["WEB3STORAGE_TOKEN"]
+        if "WEB3STORAGE_EMAIL" in os.environ:
+            config["ipfs"]["email"] = os.environ["WEB3STORAGE_EMAIL"]
         
         return config
     
@@ -122,8 +122,8 @@ class DecentralizedVideoPipeline:
                 safe_config["ethereum"]["private_key"] = ""
         
         if "ipfs" in safe_config:
-            if "token" in safe_config["ipfs"]:
-                safe_config["ipfs"]["token"] = ""
+            # No need to redact email as it's not a sensitive secret
+            pass
         
         if "livepeer" in safe_config:
             if "api_key" in safe_config["livepeer"]:
@@ -159,13 +159,13 @@ class DecentralizedVideoPipeline:
         
         print(f"Uploading to IPFS: {video_path}")
         
-        # Set Web3.Storage token from config or environment
+        # Set Web3.Storage email from config or environment
         env = os.environ.copy()
-        if "ipfs" in self.config and "token" in self.config["ipfs"]:
-            env["WEB3STORAGE_TOKEN"] = self.config["ipfs"]["token"]
+        if "ipfs" in self.config and "email" in self.config["ipfs"]:
+            env["WEB3STORAGE_EMAIL"] = self.config["ipfs"]["email"]
         
-        # Determine which IPFS handler to use
-        ipfs_script = "ipfs_handler_web3storage.js"
+        # Use the new W3UP handler
+        ipfs_script = "ipfs_handler_w3up.js"
         if not os.path.exists(ipfs_script):
             print(f"Warning: {ipfs_script} not found, falling back to default ipfs_handler.js")
             ipfs_script = "ipfs_handler.js"
