@@ -27,3 +27,31 @@
     "private_key": ""
   }
 }
+{
+  "directories": {
+    "input": "input",
+    "output": "output",
+    "model": "model",
+    "cache": "cache"
+  },
+  "model": {
+    "path": "model/residual_encoder.pth",
+    "training_video": null
+  },
+  "livepeer": {
+    "api_key": "your_livepeer_api_key_here",
+    "stream_name": "decentralized-video-stream",
+    "cache_enabled": true,
+    "server_port": 8080
+  },
+  "ipfs": {
+    "service": "web3.storage",
+    "token": "your_web3storage_token_here",
+    "gateway": "https://{cid}.ipfs.w3s.link"
+  },
+  "ethereum": {
+    "provider_url": "http://localhost:8545",
+    "contract_address": "your_deployed_contract_address",
+    "private_key": ""
+  }
+}
