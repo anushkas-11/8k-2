@@ -1,0 +1,34 @@
+{
+  "name": "decentralized-video-platform",
+  "version": "0.1.0",
+  "description": "Decentralized Video Platform with AI Compression, Livepeer, IPFS, and Ethereum",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network hardhat",
+    "deploy:goerli": "hardhat run scripts/deploy.js --network goerli",
+    "deploy:mumbai": "hardhat run scripts/deploy.js --network mumbai",
+    "ipfs-upload": "node ipfs_handler.js",
+    "blockchain-upload": "node web3client.js upload",
+    "start-local-node": "hardhat node",
+    "pipeline": "python pipeline.py"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "dotenv": "^16.0.3",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.14.0",
+    "ipfs-http-client": "^60.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "license": "MIT"
+}
